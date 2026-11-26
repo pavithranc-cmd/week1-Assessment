@@ -17,8 +17,9 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-ROOT = Path(__file__).parent.parent       # the week1-assessment folder
-DATA_DIR = ROOT / "data"
+TASK_DIR = Path(__file__).parent          # the task2_files_api folder
+ROOT = TASK_DIR.parent                     # the week1-assessment folder (holds .env)
+DATA_DIR = TASK_DIR / "data"
 BASE_URL = "https://jsonplaceholder.typicode.com"
 TIMEOUT = 5                               # seconds to wait before giving up
 

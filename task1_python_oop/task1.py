@@ -14,9 +14,9 @@ Only Python standard-library modules are used.
 import csv                 # built-in module for reading CSV files
 from pathlib import Path   # built-in module for working with file paths
 
-# The CSV file is in the data/ folder, one level above src/.
+# The CSV file is in the data/ folder next to this script.
 # Using __file__ means the program works no matter which folder you run it from.
-CSV_FILE = Path(__file__).parent.parent / "data" / "employees.csv"
+CSV_FILE = Path(__file__).parent / "data" / "employees.csv"
 
 
 # ---------------------------------------------------------------------------
