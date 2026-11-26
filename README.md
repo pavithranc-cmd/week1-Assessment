@@ -1,5 +1,5 @@
 # Week 1 Assessment - Python & Data Engineering
 
-Week 1 assessment: Python core, files and APIs, NumPy/Pandas/Matplotlib, Git and notebooks.
+Week 1 assessment by pavithranc-cmd (main branch).
 
-Setup and run instructions will be added when the analysis is complete.
+Run instructions: see the src/ folder.
