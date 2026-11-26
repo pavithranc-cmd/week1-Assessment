@@ -1,5 +1,7 @@
 # Week 1 Assessment - Python & Data Engineering
 
+Week 1 assessment by pavithranc-cmd.
+
 ## Project structure
 ```text
 week1-assessment/
