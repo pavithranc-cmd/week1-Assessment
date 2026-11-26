@@ -29,8 +29,8 @@ import pandas as pd
 
 ROOT = Path(__file__).parent.parent       # the week1-assessment folder
 DATA_DIR = ROOT / "data"
-REPORT_DIR = ROOT / "reports"
-REPORT_DIR.mkdir(exist_ok=True)
+CHART_DIR = ROOT / "reports" / "charts"
+CHART_DIR.mkdir(parents=True, exist_ok=True)
 
 STUDENTS = ["Asha", "Bala", "Chitra", "Dinesh"]
 SUBJECTS = ["Maths", "Science", "English"]
@@ -202,7 +202,7 @@ def make_charts(df, summary, marks):
     ax.set_ylabel("Salary (INR)")
     ax.legend()
     fig.tight_layout()
-    fig.savefig(REPORT_DIR / "bar_avg_salary.png")
+    fig.savefig(CHART_DIR / "bar_avg_salary.png")
     plt.close(fig)
     top = summary["avg_salary"].idxmax()
     low = summary["avg_salary"].idxmin()
@@ -215,11 +215,11 @@ def make_charts(df, summary, marks):
     counts, edges, _ = ax.hist(df["salary"], bins=5, edgecolor="black", label="Employees")
     ax.set_title("Salary Distribution")
     ax.set_xlabel("Salary (INR)")
-    ax.set_ylabel("Number of employees")
+    ax.set_ylabel("Number of employees (count)")
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))   # whole numbers only
     ax.legend()
     fig.tight_layout()
-    fig.savefig(REPORT_DIR / "hist_salary.png")
+    fig.savefig(CHART_DIR / "hist_salary.png")
     plt.close(fig)
     i = counts.argmax()
     print(f"Histogram: the most common salary range is {edges[i]:.0f}-{edges[i + 1]:.0f} "
@@ -230,11 +230,11 @@ def make_charts(df, summary, marks):
     for city, group in df.groupby("city"):
         ax.scatter(group["id"], group["salary"], label=city, s=60)
     ax.set_title("Employee Salary by City")
-    ax.set_xlabel("Employee ID")
+    ax.set_xlabel("Employee ID (number)")
     ax.set_ylabel("Salary (INR)")
     ax.legend(title="City")
     fig.tight_layout()
-    fig.savefig(REPORT_DIR / "scatter_salary_city.png")
+    fig.savefig(CHART_DIR / "scatter_salary_city.png")
     plt.close(fig)
     city_avg = df.groupby("city")["salary"].mean()
     print(f"Scatter: {city_avg.idxmax()} has the highest average salary by city "
@@ -246,16 +246,16 @@ def make_charts(df, summary, marks):
         ax.plot(SUBJECTS, row, marker="o", label=name)
     ax.set_title("Student Marks by Subject")
     ax.set_xlabel("Subject")
-    ax.set_ylabel("Marks")
+    ax.set_ylabel("Marks (out of 100)")
     ax.legend(title="Student", loc="upper left", bbox_to_anchor=(1.01, 1))   # outside the plot
     fig.tight_layout()
-    fig.savefig(REPORT_DIR / "line_student_marks.png")
+    fig.savefig(CHART_DIR / "line_student_marks.png")
     plt.close(fig)
     avgs = marks.mean(axis=1)
     print(f"Line: {STUDENTS[avgs.argmax()]} has the best average ({avgs.max():.2f}) "
           f"and {STUDENTS[avgs.argmin()]} the lowest ({avgs.min():.2f}).")
 
-    print("Saved 4 charts to reports/")
+    print("Saved 4 charts to reports/charts/")
 
 
 def main():
