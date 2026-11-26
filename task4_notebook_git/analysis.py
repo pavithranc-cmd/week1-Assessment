@@ -4,12 +4,12 @@
 # # Week 1 Assessment - Employee Data Analysis
 # 
 # This notebook covers Task 3 (NumPy, Pandas, Matplotlib) step by step.
-# It reads the original `data/employees.csv` and `data/departments.csv` and never changes them.
-# Tasks 1 and 2 are in `src/task1.py` and `src/task2.py`.
+# It reads the original `task3_numpy_pandas/data/employees.csv` and `departments.csv` and never changes them.
+# Tasks 1, 2 and 3 are in the `task1_python_oop/`, `task2_files_api/` and `task3_numpy_pandas/` folders.
 
 # ## 1. Setup
 # Import the libraries and find the project folder, so the notebook works
-# whether Jupyter starts in `notebooks/` or in the project root.
+# whether Jupyter starts in `task4_notebook_git/` or in the project root.
 
 # In[1]:
 
@@ -20,8 +20,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-ROOT = Path.cwd().parent if Path.cwd().name == "notebooks" else Path.cwd()
-DATA = ROOT / "data"
+ROOT = Path.cwd().parent if Path.cwd().name == "task4_notebook_git" else Path.cwd()
+DATA = ROOT / "task3_numpy_pandas" / "data"
 print("Project folder:", ROOT.name)
 
 
@@ -194,7 +194,7 @@ outer[["department", "name", "salary", "head", "budget"]]
 
 
 # ## 7. Charts
-# The same four charts are saved as PNG files in `reports/charts/` by `src/task3.py`.
+# The same four charts are saved as PNG files in `task3_numpy_pandas/reports/charts/` by `task3.py`.
 # 
 # ### 7.1 Bar chart - average salary by department
 

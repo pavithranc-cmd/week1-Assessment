@@ -3,15 +3,26 @@
 Week 1 assessment by pavithranc-cmd.
 
 ## Project structure
+Each task has its own folder with its own script, data and outputs.
 ```text
 week1-assessment/
-├── data/            employees.csv (original), departments.csv, generated JSON/CSV, backup/
-├── notebooks/       analysis.ipynb and its nbconvert export analysis.py
-├── reports/charts/  4 PNG charts (bar, histogram, scatter, line)
-├── src/             task1.py, task2.py, task3.py
+├── task1_python_oop/        Task 1 - Python core, OOP and errors
+│   ├── data/employees.csv
+│   └── task1.py
+├── task2_files_api/         Task 2 - files, API and environment
+│   ├── data/                employees.csv + outputs: employees.json, high_earners.csv, users.json
+│   └── task2.py
+├── task3_numpy_pandas/      Task 3 - NumPy, Pandas and Matplotlib
+│   ├── data/                employees.csv, departments.csv
+│   ├── reports/charts/      4 PNG charts (bar, histogram, scatter, line)
+│   └── task3.py
+├── task4_notebook_git/      Task 4 - notebook, terminal and Git
+│   ├── analysis.ipynb       reads ../task3_numpy_pandas/data/
+│   ├── analysis.py          nbconvert export
+│   └── backup/              made with mkdir, cp and mv
 ├── requirements.txt
 ├── .gitignore
-├── .env.example
+├── .env.example             copy to .env (shared by all tasks, never committed)
 └── README.md
 ```
 
@@ -25,36 +36,34 @@ pip install -r requirements.txt
 copy .env.example .env     # then put your own API_KEY in .env
 ```
 
-## Run the scripts (from the project root, with .venv active)
+## Run the tasks (from the project root, with .venv active)
 ```powershell
-python src/task1.py   # Python core, OOP, custom error, loops
-python src/task2.py   # CSV -> JSON/CSV, .env, API calls (needs internet)
-python src/task3.py   # NumPy, Pandas, cleaning, merges, 4 charts -> reports/charts/
+python task1_python_oop/task1.py     # Python core, OOP, custom error, loops
+python task2_files_api/task2.py      # CSV -> JSON/CSV, .env, API calls (needs internet)
+python task3_numpy_pandas/task3.py   # NumPy, Pandas, cleaning, merges, 4 charts
 ```
-Outputs: `data/employees.json`, `data/high_earners.csv`, `data/users.json`,
-`data/departments.csv` and the four PNG files in `reports/charts/`.
+Paths are built from each script's own folder, so `cd task1_python_oop` then `python task1.py` also works.
 
-## Notebook
-Open `notebooks/analysis.ipynb` in VS Code, choose the `.venv` kernel and click **Run All**.
+## Task 4 - Notebook
+Open `task4_notebook_git/analysis.ipynb` in VS Code, choose the `.venv` kernel and click **Run All**.
 To run it and export it from the terminal:
 ```powershell
-cd notebooks
+cd task4_notebook_git
 python -m nbconvert --to notebook --execute --inplace analysis.ipynb
 python -m nbconvert --to script analysis.ipynb     # creates analysis.py
 cd ..
 ```
 
-## Terminal commands (Git Bash)
+## Task 4 - Terminal commands (Git Bash)
 ```bash
-mkdir -p data/backup reports/charts                            # make folders
-cp data/employees.csv data/backup/employees.csv                # copy a file
-mv data/backup/employees.csv data/backup/employees_backup.csv  # rename (move) it
-mv reports/*.png reports/charts/                               # move charts into charts/
-grep -n "Chennai" data/employees.csv                           # 4 rows: Arun, Priya, Divya, Suresh
+mkdir -p task4_notebook_git/backup                                      # make a folder
+cp task1_python_oop/data/employees.csv task4_notebook_git/backup/employees.csv            # copy a file
+mv task4_notebook_git/backup/employees.csv task4_notebook_git/backup/employees_backup.csv # rename (move) it
+grep -n "Chennai" task1_python_oop/data/employees.csv                   # 4 rows: Arun, Priya, Divya, Suresh
 ```
 PowerShell equivalents: `New-Item -ItemType Directory`, `Copy-Item`, `Move-Item`, `Select-String`.
 
-## Git workflow
+## Task 4 - Git workflow
 ```powershell
 git checkout -b feature/analysis         # work on a feature branch
 git add <files>
@@ -64,6 +73,7 @@ git log --oneline --graph --all          # view the history
 ```
 
 ## Decisions
+- Each task has its own folder, data and outputs, so it can be shown on its own.
 - Paths are built from `__file__`, so the scripts work from any folder.
 - `employees.csv` is never changed. Cleaning is done on a copy made in code with 2 blank salaries, 1 duplicate row and messy text.
 - Text is standardised with `strip()` and title case, except `HR` and `IT`, which stay in capitals.

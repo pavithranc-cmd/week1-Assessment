@@ -27,9 +27,9 @@ from matplotlib.ticker import MaxNLocator
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).parent.parent       # the week1-assessment folder
-DATA_DIR = ROOT / "data"
-CHART_DIR = ROOT / "reports" / "charts"
+TASK_DIR = Path(__file__).parent          # the task3_numpy_pandas folder
+DATA_DIR = TASK_DIR / "data"
+CHART_DIR = TASK_DIR / "reports" / "charts"
 CHART_DIR.mkdir(parents=True, exist_ok=True)
 
 STUDENTS = ["Asha", "Bala", "Chitra", "Dinesh"]
