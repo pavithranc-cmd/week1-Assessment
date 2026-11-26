@@ -4,17 +4,17 @@ Week 1 Assessment - Task 3: NumPy, Pandas and Matplotlib
 Part A - NumPy marks array (4 students x 3 subjects)
 Part B - Pandas basics on data/employees.csv
 Part C - Create data/departments.csv (includes one department with no employees)
-Part D - Cleaning data/employees_raw.csv (2 missing salaries, 1 duplicate row)
+Part D - Cleaning a working copy (2 missing salaries, 1 duplicate row, messy text)
 Part E - groupby().agg() and pd.merge (inner, left, outer)
-Part F - 4 charts saved as PNG in reports/, one insight each
+Part F - 4 charts saved as PNG in reports/charts/, one insight each
 
 How the cleaning data relates to the original:
-    employees_raw.csv is a COPY of employees.csv that I made dirty on purpose:
-    Priya's and Meena's salaries are blank, and Rahul's row appears twice.
-    employees.csv itself is never changed.
+    The cleaning step works on a COPY of the employees DataFrame (df.copy()).
+    In that copy I blank Priya's and Meena's salaries, repeat Rahul's row and
+    make some text messy (extra spaces, wrong case). employees.csv is never changed.
     After cleaning, the copy has the same 8 employees again, so the headcount
     (Sales 2 | HR 2 | IT 3 | Finance 1) is the same as in the original.
-    The analysis uses the ORIGINAL file, because the two filled-in salaries
+    The analysis uses the ORIGINAL data, because the two filled-in salaries
     are only estimates (the median), not the real values.
 """
 
@@ -99,30 +99,64 @@ def create_departments():
 # ---------------------------------------------------------------------------
 # PART D - CLEANING
 # ---------------------------------------------------------------------------
+def make_dirty_copy(original):
+    """Make a messy WORKING COPY of the employees. The original is not touched."""
+    dirty = original.copy()
+    dirty["salary"] = dirty["salary"].astype(object)             # allow text and blanks
+    dirty.loc[dirty["name"] == "Priya", "salary"] = None         # missing salary 1
+    dirty.loc[dirty["name"] == "Meena", "salary"] = None         # missing salary 2
+    dirty.loc[dirty["name"] == "Arun", "salary"] = "30000"       # number stored as text
+    dirty.loc[dirty["name"] == "Arun", "city"] = "  chennai "    # extra spaces, lower case
+    dirty.loc[dirty["name"] == "Meena", "department"] = "sales"  # lower case
+    dirty.loc[dirty["name"] == "Anitha", "department"] = " hr "  # spaces, lower case
+    rahul = dirty[dirty["name"] == "Rahul"]
+    dirty = pd.concat([dirty, rahul], ignore_index=True)         # duplicate row
+    return dirty
+
+
+def standard_department(name):
+    """Tidy a department name. HR and IT are short forms, so they stay in CAPITALS."""
+    name = name.strip()
+    if name.upper() in ["HR", "IT"]:
+        return name.upper()
+    return name.title()                                          # sales -> Sales
+
+
 def clean_employees(original):
-    print("\n=== D. Cleaning employees_raw.csv ===")
-    raw = pd.read_csv(DATA_DIR / "employees_raw.csv")
-    print(f"Raw rows: {len(raw)} | Missing salaries: {raw['salary'].isna().sum()} "
+    print("\n=== D. Cleaning a working copy ===")
+    raw = make_dirty_copy(original)
+    print(f"Working copy rows: {len(raw)} | Missing salaries: {raw['salary'].isna().sum()} "
           f"| Duplicate rows: {raw.duplicated().sum()}")
 
-    # 1. Drop duplicates FIRST, so the duplicate row does not affect the median.
-    clean = raw.drop_duplicates().copy()
+    clean = raw.copy()
 
-    # 2. Fill missing salaries with the median (less affected by extreme values than mean).
+    # 1. Standardise text: remove extra spaces and fix the case.
+    clean["name"] = clean["name"].str.strip().str.title()
+    clean["city"] = clean["city"].str.strip().str.title()
+    clean["department"] = clean["department"].apply(standard_department)
+
+    # 2. Drop duplicates, so the repeated row does not affect the median.
+    clean = clean.drop_duplicates()
+
+    # 3. Correct types: salary has text and blanks, so convert it to a number.
+    clean["salary"] = pd.to_numeric(clean["salary"])
+
+    # 4. Fill missing salaries with the median (less affected by extreme values than mean).
     median_salary = clean["salary"].median()
-    clean["salary"] = clean["salary"].fillna(median_salary)
-
-    # 3. Correct types: salary became float because of the NaN values; make it int again.
-    clean["salary"] = clean["salary"].astype(int)
-    clean["department"] = clean["department"].astype("category")
+    clean["salary"] = clean["salary"].fillna(median_salary).astype(int)
 
     print(f"Median used: {median_salary:.0f}")
     print(f"Clean rows: {len(clean)} | Missing salaries: {clean['salary'].isna().sum()}")
+    print("Departments after cleaning:", sorted(clean["department"].unique()))
     print(clean.dtypes)
 
-    # Check: the cleaned copy holds exactly the same employees as the original file.
+    # Check: same employees and same headcount as the original file.
     same = sorted(clean["id"]) == sorted(original["id"])
     print("Same 8 employees as employees.csv:", same)
+    clean_counts = clean["department"].value_counts().reindex(DEPT_ORDER).tolist()
+    print("Headcount after cleaning:", dict(zip(DEPT_ORDER, clean_counts)))
+    print("Original employees.csv unchanged:",
+          original.equals(pd.read_csv(DATA_DIR / "employees.csv")))
     return clean
 
 
